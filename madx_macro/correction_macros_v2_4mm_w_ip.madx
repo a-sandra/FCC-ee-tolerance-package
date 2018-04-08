@@ -1,0 +1,63 @@
+!!---------------------- Dispersion Free Steering-----------------------------!!
+
+    select_twiss_dfs(): macro={
+        select,flag=twiss,clear;
+        select,flag=twiss,column=name,s,y,dy,vkick;
+        twiss, centre, file="twiss_2_correct.twiss";
+    };
+
+
+    mymacro($iter, $ssg): macro={
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/dfs/dfs_batch_v205_4mm.py $ssg';
+        print, text="python DFS script passe";
+        call, file="kicker.str";
+        twiss, centre, file="twiss_dfs.twiss";
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/getstuff/get_stuff.py twiss_dfs.twiss nosext';
+    };
+
+
+!!---------------------- Coupling Correction -----------------------------!!
+
+    macroscoupling($iter, $ssg): macro={
+        //system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/coupling_v25/rdt_coupling_20mm.py $ssg';
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/coupling_v25/rdt_coupling_4mm_ip.py $ssg';
+        call, file="skew.str";
+        twiss, centre, file="twiss_coupling.twiss";
+        //system, 'cp twiss_coupling.twiss twiss_coupling_$iter.twiss';
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/getstuff/get_rdt.py twiss_coupling.twiss coupling';
+    };
+
+    select_twiss_coupling(): macro={
+        select,flag=twiss,clear;
+        select, flag=twiss,pattern="BPM*",column=name,s,betx,bety,ALFX,ALFY,MUX,MUY,r11,r12,r21,r22,dy,x,y,dx;
+        twiss, centre, file="twiss_coupling.twiss";
+    };
+
+    macroscouplingdy($iter,$ssg): macro={
+        //system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/coupling_v25/coupling_dy_20mm.py $ssg';
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/coupling_v25/coupling_dy_4mm_ip.py $ssg';
+        call, file="skew.str";
+        twiss, centre, file="twiss_coupling.twiss";
+        //system, 'cp twiss_coupling_$iter.twiss twiss_coupling.twiss';
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/getstuff/get_rdt.py twiss_coupling.twiss coupling';
+    };
+
+!!--------------------------------------------------------------------------!!
+/*
+    match, sequence = L000004;
+    global, sequence = L000004, Q1=387.106;
+    global, sequence = L000004, Q2=387.18;
+    vary, name=K1QF2, step=1.0E-6;
+    vary, name=K1QF4, step=1.0E-6;
+    vary, name=K1QD3, step=1.0E-6;
+    vary, name=K1QD1, step=1.0E-6;
+    jacobian,calls=30,tolerance=1.e-15;
+    endmatch;*/
+!!--------------------------------------------------------------------------!!
+
+    macrobetabeat($iter): macro={
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/correct_betabeat/correct_betabeat_v205_4mm.py 1.0e-3';
+        call, file="quad_multipole.str";
+        twiss, centre, file="beat.twiss";
+        system, 'cp beat.twiss twiss_beat_$iter.twiss';
+    };

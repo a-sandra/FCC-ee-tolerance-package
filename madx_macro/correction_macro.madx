@@ -1,0 +1,114 @@
+
+ !------------------------------ Coupling -------------------------------
+
+    macroscoupling($iter, $ssg): macro={
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/coupling/rdt_coupling.py $ssg';
+        call, file="skew.str";
+        twiss, centre, file="twiss_coupling.twiss";
+        //system, 'cp twiss_coupling_$iter.twiss twiss_coupling.twiss';
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/getstuff/get_rdt.py twiss_coupling.twiss coupling';
+    };
+
+    macroscouplingsextupole($iter): macro={
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/coupling/coupling_rdt.py 1.0e-3';
+        call, file="skew.str";
+        twiss, centre, file="twiss_coupling.twiss";
+        //system, 'cp twiss_coupling_$iter_sext.twiss twiss_coupling.twiss';
+    };
+
+    macroscouplingdy($iter,$ssg): macro={
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/coupling/fullcoupling.py $ssg';
+        call, file="skew.str";
+        twiss, centre, file="twiss_coupling.twiss";
+        //system, 'cp twiss_coupling_$iter.twiss twiss_coupling.twiss';
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/getstuff/get_rdt.py twiss_coupling.twiss coupling';
+    };
+
+    macroscouplingdyweight($iter): macro={
+        //system, 'python coupling_rdt.py 1.0e-3';
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/coupling/fullcoupling_weight.py 1.0e-3';
+        call, file="skew.str";
+        twiss, centre, file="twiss_coupling_$iter.twiss";
+        system, 'cp twiss_coupling_$iter.twiss twiss_coupling.twiss';
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/getstuff/get_rdt.py twiss_coupling.twiss couplingdyweight';
+    };
+
+    macros_dy_skew($iter): macro={
+        system, 'python dy_skew_correction.py 2.0e-3';
+        call, file="skew.str";
+        twiss, centre, file="twiss_dy_$iter.twiss";
+        //system, 'cp twiss_dy_$iter.twiss twiss_coupling.twiss';
+    };
+
+    macrobetabeat($iter): macro={
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/correct_betabeat/correct_betabeat.py 1.0e-3';
+        call, file="quad_multipole.str";
+        coguess , x = x1;
+        coguess , px = px1;
+        coguess , y = y1;
+        coguess , py = py1;
+        twiss, centre, file="beat.twiss";
+        //system, 'cp twiss_beat_$iter.twiss beat.twiss';
+    };
+
+    macrodxbeat($iter): macro={
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/correct_betabeat/correct_dx.py 1.0e-3';
+        call, file="quad_multipole.str";
+        twiss, centre, file="twiss_beat_$iter.twiss";
+        system, 'cp twiss_beat_$iter.twiss beat.twiss';
+    };
+
+ !------------------------------ Coupling with IP skews -------------------------------
+
+    macroscoupling_ip($iter, $ssg): macro={
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/coupling/fullcoupling_w_ip.py $ssg';
+        call, file="skew.str";
+        twiss, centre, file="twiss_coupling_$iter.twiss";
+        system, 'cp twiss_coupling_$iter.twiss twiss_coupling.twiss';
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/getstuff/get_rdt.py twiss_coupling.twiss coupling';
+    };
+
+ !------------------------------ DFS -------------------------------
+
+    mymacro($iter, $deltay): macro={
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/dfs/dfs_batch.py 2.464138897445324e-06';
+        print, text="Ca coince la";
+        call, file="kicker.str";
+        twiss, centre, file="twiss_dfs.twiss";
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/getstuff/get_stuff.py twiss_dfs.twiss nosext';
+    };
+
+    macrosextupole($iter, $deltay): macro={
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/dfs/dfs_batch_sextupole.py 1.0e-5';
+        print, text="Ca coince la sextupole";
+        call, file="kicker.str";
+        twiss, centre, file="twiss_dfs_sextupole.twiss";
+        system, 'python /afs/cern.ch/user/s/saumon/FCCee/packages/correction_methods/getstuff/get_stuff.py twiss_dfs_sextupole.twiss sext';
+    };
+
+ !------------------------------ Select Twiss -------------------------------
+
+    select_twiss_dfs(): macro={
+        select,flag=twiss,clear;
+        select,flag=twiss,column=name,s,y,dy,vkick;
+        twiss, centre, file="twiss_2_correct.twiss";
+    };
+
+    select_twiss_dfs_sextupole(): macro={
+        select,flag=twiss,clear;
+        select,flag=twiss,column=name,s,y,dy,vkick;
+        twiss, centre, file="twiss_6_correct.twiss";
+    };
+
+    select_twiss_coupling(): macro={
+        select,flag=twiss,clear;
+        select, flag=twiss,pattern="BPM*",column=name,s,betx,bety,ALFX,ALFY,MUX,MUY,r11,r12,r21,r22,dy,x,y;
+        twiss, centre, file="twiss_coupling.twiss";
+    };
+
+    select_twiss_dy_skew(): macro={
+        select,flag=twiss,clear;
+        select, flag=twiss,pattern="BPM*",column=name,s,betx,bety,ALFX,ALFY,MUX,MUY,r11,r12,r21,r22,dy,x,y;
+        twiss, centre, file="twiss_dy.twiss";
+    };
+

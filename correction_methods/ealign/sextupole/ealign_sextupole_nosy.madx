@@ -1,0 +1,77 @@
+    print, text = "--------------------------------------------";
+    print, text = "ASIGN ALIGNMENT ERRORS                      ";
+    print, text = "--------------------------------------------";
+
+    select, flag=error, clear=true;
+    select, flag=error, class=SEXTUPOLE;
+    ealign, dx:=tgauss(2.5)*deltax*1.0e-6, dy:=tgauss(2.5)*deltay*1.0e-6;
+
+    /*---------------- Sextupole of the IP only----------------*/
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY1R.1";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY1R.2";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY2R.1";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY2R.2";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY2L.1";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY2L.2";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY1L.1";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY1L.2";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY1R.3";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY1R.4";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY2R.3";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY2R.4";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY2L.3";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY2L.4";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY1L.3";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="SY1L.4";
+    ealign, dx:=0.0, dy:=0.0;
+
+    select, flag=error, class=SEXTUPOLE;
+    //eprint;
+    esave, file=sextupole.err;

@@ -1,0 +1,11 @@
+    print, text = "--------------------------------------------";
+    print, text = "ASIGN ALIGNMENT ERRORS                      ";
+    print, text = "--------------------------------------------";
+
+    select, flag=error, clear=true;
+    select, flag=error, class=SEXTUPOLE;
+    ealign, dx:=tgauss(2.5)*deltax*1.0e-6, dy:=tgauss(2.5)*deltay*1.0e-6;
+
+    select, flag=error, class=SEXTUPOLE;
+    //eprint;
+    esave, file=sextupole.err;

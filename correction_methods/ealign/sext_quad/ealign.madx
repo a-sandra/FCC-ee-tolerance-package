@@ -1,0 +1,70 @@
+    print, text = "--------------------------------------------";
+    print, text = "ASIGN ALIGNMENT ERRORS                      ";
+    print, text = "--------------------------------------------";
+!
+/*---------------- Quadrupole of the Arcs only----------------*/
+
+    select, flag=error, clear=true;
+    select, flag=error, class=QUADRUPOLE;
+    ealign, dx:=tgauss(2.5)*deltax*1.0e-6, dy:=tgauss(2.5)*deltay*1.0e-6, dpsi:=tgauss(2.5)*roll*1.0e-6;
+
+/*---------------- Quadrupole of the IP only----------------*/
+
+    select, flag=error, clear;
+    select, flag=error, pattern="QC1R2.1";
+    ealign, dx:=tgauss(2.5)*deltaip*1.0e-6, dy:=tgauss(2.5)*deltaip*1.0e-6, dpsi:=tgauss(2.5)*deltaip*1.0e-6;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="QC2R2.1";
+    ealign, dx:=tgauss(2.5)*deltaip*1.0e-6, dy:=tgauss(2.5)*deltaip*1.0e-6, dpsi:=tgauss(2.5)*deltaip*1.0e-6;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="QC2L1.1";
+    ealign, dx:=tgauss(2.5)*deltaip*1.0e-6, dy:=tgauss(2.5)*deltaip*1.0e-6, dpsi:=tgauss(2.5)*deltaip*1.0e-6;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="QC1L1.1";
+    ealign, dx:=tgauss(2.5)*deltaip*1.0e-6, dy:=tgauss(2.5)*deltaip*1.0e-6, dpsi:=tgauss(2.5)*deltaip*1.0e-6;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="QC1R2.2";
+    ealign, dx:=tgauss(2.5)*deltaip*1.0e-6, dy:=tgauss(2.5)*deltaip*1.0e-6, dpsi:=tgauss(2.5)*deltaip*1.0e-6;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="QC2R2.2";
+    ealign, dx:=tgauss(2.5)*deltaip*1.0e-6, dy:=tgauss(2.5)*deltaip*1.0e-6, dpsi:=tgauss(2.5)*deltaip*1.0e-6;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="QC2L1.2";
+    ealign, dx:=tgauss(2.5)*deltaip*1.0e-6, dy:=tgauss(2.5)*deltaip*1.0e-6, dpsi:=tgauss(2.5)*deltaip*1.0e-6;
+
+    select, flag=error, clear;
+    select, flag=error, pattern="QC1L1.2";
+    ealign, dx:=tgauss(2.5)*deltaip*1.0e-6, dy:=tgauss(2.5)*deltaip*1.0e-6, dpsi:=tgauss(2.5)*deltaip*1.0e-6;
+
+/*---------------- Quadrupole of the IP only----------------*/
+
+    select, flag=error, clear=true;
+    select, flag=error, class=SEXTUPOLE;
+    ealign, dx:=tgauss(2.5)*deltax*1.0e-6, dy:=tgauss(2.5)*deltay*1.0e-6;
+
+    select, flag=error, class=SEXTUPOLE;
+    esave, file=sextupole.err;
+
+/*---------------- errors into file ----------------*/
+
+    select, flag=error, clear;
+    select, flag=error, class=QUADRUPOLE, pattern="QC1R2.1"; 
+    select, flag=error, class=QUADRUPOLE, pattern="QC2R2.1";
+    select, flag=error, class=QUADRUPOLE, pattern="QC2L1.1";
+    select, flag=error, class=QUADRUPOLE, pattern="QC1L1.1"; 
+    select, flag=error, class=QUADRUPOLE, pattern="QC1R2.2";
+    select, flag=error, class=QUADRUPOLE, pattern="QC2R2.2"; 
+    select, flag=error, class=QUADRUPOLE, pattern="QC2L1.2";
+    select, flag=error, class=QUADRUPOLE, pattern="QC1L1.2";
+    esave, file=quad_ip.err;
+
+    select, flag=error, clear;
+    select, flag=error, class=QUADRUPOLE;
+    esave, file=quad_arc.err;
+
